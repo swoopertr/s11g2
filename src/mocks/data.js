@@ -63,6 +63,11 @@ const getById = id => {
   return data.find(d => d.id === id)
 }
 
+const getByEmail = email => {
+    const result = data.find(item => item.email == email);
+    return {isExists : result ? true : false };
+}
+
 const create = item => {
   data.push({ id: nanoid(5), createdAt: moment().format(), ...item })
   return data
@@ -72,5 +77,6 @@ module.exports = {
   getAll,
   getById,
   create,
-  resetData
+  resetData,
+  getByEmail
 }

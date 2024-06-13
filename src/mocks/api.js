@@ -9,6 +9,8 @@ api.use(express.json())
 
 api.use(cors())
 
+
+
 const authenticator = (req, res, next) => {
   const { authorization } = req.headers;
   const { token } = credentials;
@@ -19,6 +21,11 @@ const authenticator = (req, res, next) => {
     res.status(403).json({ error: 'User not currently logged in.' });
   }
 }
+
+api.get('/', (req, res) => {
+    console.log(req.body);
+    res.json({status: "ok"});
+  })
 
 //Get All Articles Endpoint
 api.post('/api/login', (req, res) => {
@@ -58,6 +65,11 @@ api.get('/api/friends/:id', authenticator, (req, res) => {
 api.post('/api/friends', authenticator, (req, res) => {
   console.log(req.body);
   res.json(Data.create(req.body))
+})
+
+api.post('/api/friends/check-email', authenticator,(req, res)=>{
+    console.log(req.body);
+    res.json(Data.getByEmail(req.body.email));
 })
 
 api.listen(9000, () => {

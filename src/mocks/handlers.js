@@ -4,7 +4,12 @@ import credentials from './credentials';
 
 function authenticator(req, resp) {
   const { authorization } = req.headers._headers;
-  return (authorization === credentials.token)?resp():res( ctx.status(403),ctx.json({ error: 'User not currently logged in.' }));
+  if(authorization === credentials.token){
+    return resp();
+  } else{
+    return  resp( ctx.status(403),ctx.json({ error: 'User not currently logged in.' }))
+  }
+  //return (authorization === credentials.token)? resp() : res( ctx.status(403),ctx.json({ error: 'User not currently logged in.' }));
 }
 
 
@@ -50,6 +55,15 @@ function getById(req, res, ctx) {
   }))
 }
 
+function getByEmail(req, res, ctx) {
+    return (authenticator(req, ()=>{
+      return res(
+        ctx.status(200),
+        ctx.json(Data.getByEmail(req.params.id))
+      )
+    }))
+  }
+
 function create(req, res, ctx) {
   return (authenticator(req, ()=> {
     return res(
@@ -83,4 +97,5 @@ export const handlers = [
   rest.get('http://localhost:9000/api/friends', getAll),
   rest.get('http://localhost:9000/api/friends/:id', getById),
   rest.post('http://localhost:9000/api/articles', create)
+  rest.post('http://localhost:9000/api/friends/check-email', getByEmail)
 ]
